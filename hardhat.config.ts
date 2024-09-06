@@ -2,10 +2,10 @@ import {HardhatUserConfig} from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@xyrusworx/hardhat-solidity-json";
 import 'solidity-docgen';
-import "./tasks/whitelist";
-import "./tasks/deploy";
-import "./tasks/e2e";
-import "./tasks/functions";
+// import "./tasks/whitelist";
+// import "./tasks/deploy";
+// import "./tasks/e2e";
+// import "./tasks/functions";
 
 require('dotenv').config()
 
