@@ -1,311 +1,13 @@
-// Import ethers from Hardhat package
 import readline from "readline";
+import { contractABI } from "../config/abi";
+import { Contract, TransactionReceipt } from "ethers";
 
 const { ethers } = require("hardhat");
 
 async function main() {
-  const contractABI = [
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "initialOracleAddress",
-          type: "address",
-        },
-        {
-          internalType: "string",
-          name: "systemPrompt",
-          type: "string",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "constructor",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "owner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          internalType: "uint256",
-          name: "chatId",
-          type: "uint256",
-        },
-      ],
-      name: "ChatCreated",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "newOracleAddress",
-          type: "address",
-        },
-      ],
-      name: "OracleAddressUpdated",
-      type: "event",
-    },
-    {
-      inputs: [
-        {
-          internalType: "string",
-          name: "message",
-          type: "string",
-        },
-        {
-          internalType: "uint256",
-          name: "runId",
-          type: "uint256",
-        },
-      ],
-      name: "addMessage",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      name: "chatRuns",
-      outputs: [
-        {
-          internalType: "address",
-          name: "owner",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "messagesCount",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "chatId",
-          type: "uint256",
-        },
-      ],
-      name: "getMessageHistory",
-      outputs: [
-        {
-          components: [
-            {
-              internalType: "string",
-              name: "role",
-              type: "string",
-            },
-            {
-              components: [
-                {
-                  internalType: "string",
-                  name: "contentType",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "value",
-                  type: "string",
-                },
-              ],
-              internalType: "struct IOracle.Content[]",
-              name: "content",
-              type: "tuple[]",
-            },
-          ],
-          internalType: "struct IOracle.Message[]",
-          name: "",
-          type: "tuple[]",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "runId",
-          type: "uint256",
-        },
-        {
-          internalType: "string",
-          name: "response",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "errorMessage",
-          type: "string",
-        },
-      ],
-      name: "onOracleFunctionResponse",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "runId",
-          type: "uint256",
-        },
-        {
-          components: [
-            {
-              internalType: "string",
-              name: "id",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "content",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "functionName",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "functionArguments",
-              type: "string",
-            },
-            {
-              internalType: "uint64",
-              name: "created",
-              type: "uint64",
-            },
-            {
-              internalType: "string",
-              name: "model",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "systemFingerprint",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "object",
-              type: "string",
-            },
-            {
-              internalType: "uint32",
-              name: "completionTokens",
-              type: "uint32",
-            },
-            {
-              internalType: "uint32",
-              name: "promptTokens",
-              type: "uint32",
-            },
-            {
-              internalType: "uint32",
-              name: "totalTokens",
-              type: "uint32",
-            },
-          ],
-          internalType: "struct IOracle.OpenAiResponse",
-          name: "response",
-          type: "tuple",
-        },
-        {
-          internalType: "string",
-          name: "errorMessage",
-          type: "string",
-        },
-      ],
-      name: "onOracleOpenAiLlmResponse",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "oracleAddress",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "prompt",
-      outputs: [
-        {
-          internalType: "string",
-          name: "",
-          type: "string",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "newOracleAddress",
-          type: "address",
-        },
-      ],
-      name: "setOracleAddress",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "string",
-          name: "message",
-          type: "string",
-        },
-      ],
-      name: "startChat",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-  ];
-
   if (!process.env.QUICKSTART_CONTRACT_ADDRESS) {
     throw new Error("QUICKSTART_CONTRACT_ADDRESS env variable is not set.");
   }
-
-  // chatRuns
 
   const contractAddress = process.env.QUICKSTART_CONTRACT_ADDRESS;
   const [signer] = await ethers.getSigners();
@@ -317,27 +19,100 @@ async function main() {
   const message = await getUserInput();
 
   // Call the startChat function
-  const transactionResponse = await contract.startChat(message);
-  const receipt = await transactionResponse.wait();
-  console.log(
-    `Transaction sent, hash: ${receipt.hash}.\nExplorer: https://explorer.galadriel.com/tx/${receipt.hash}`
-  );
-  console.log(`Chat started with message: "${message}"`);
+  try {
+    const transactionResponse = await contract.startChat(message);
+    // console.log(transactionResponse, "transactionResponse");
 
-  // loop and sleep by 1000ms, and keep printing `lastResponse` in the contract.
-  let lastResponse = await contract.lastResponse();
-  let newResponse = lastResponse;
+    const receipt = await transactionResponse.wait();
+    // console.log(receipt, "receipt");
 
-  // print w/o newline
-  console.log("Waiting for response: ");
-  while (newResponse === lastResponse) {
-    // TODO: Get the chat history
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    newResponse = await contract.chatRuns();
-    console.log(".");
+    console.log(
+      `Transaction sent, hash: ${receipt.hash}.\nExplorer: https://explorer.galadriel.com/tx/${receipt.hash}`
+    );
+    console.log(`Chat started with message: "${message}"`);
+
+    let chatId = getChatId(receipt, contract);
+    console.log(`Created chat ID: ${chatId}`);
+    if (!chatId && chatId !== 0) {
+      return;
+    }
+  } catch (error) {
+    console.error("Error starting chat:", error);
+    return;
   }
 
-  console.log(`Chat started with message: ${newResponse}`);
+  console.log("Waiting for response: ");
+  let attempts = 0;
+  const maxAttempts = 10; // Adjust as needed
+
+  while (attempts < maxAttempts) {
+    try {
+      const chatRun = await contract.chatRuns(0); // Assuming 0 is the latest chat ID
+      console.log(chatRun, "chatRun");
+
+      console.log(
+        `Chat run: Owner: ${
+          chatRun[0]
+        }, Messages Count: ${chatRun[1].toString()}`
+      );
+
+      if (Number(chatRun[1].toString()) >= 1) {
+        const messages = await contract.getMessageHistory(0); // Use 0 as the chat ID
+        console.log(messages, "messages");
+
+        // Function to extract message content
+        const getMessageContent = (message: any) => {
+          if (message && message.content && message.content.length > 0) {
+            return message.content[0].value;
+          }
+          return "Unable to retrieve message content";
+        };
+
+        // Extract and log system message
+        const systemMessage = messages.find(
+          (msg: any) => msg.role === "system"
+        );
+        console.log(
+          "\nSystem message:",
+          systemMessage
+            ? getMessageContent(systemMessage)
+            : "No system message found"
+        );
+
+        // Extract and log user message
+        const userMessage = messages.find((msg: any) => msg.role === "user");
+        console.log(
+          "\nUser message:",
+          userMessage ? getMessageContent(userMessage) : "No user message found"
+        );
+
+        // Extract and log assistant message (if present)
+        const assistantMessage = messages.find(
+          (msg: any) => msg.role === "assistant"
+        );
+        if (assistantMessage) {
+          console.log("\nChat response:", getMessageContent(assistantMessage));
+        } else {
+          console.log("\nNo response from the assistant yet.");
+        }
+
+        break;
+      }
+    } catch (error) {
+      console.error("Error while fetching chat run:", error);
+      break;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+    process.stdout.write(".");
+    attempts++;
+  }
+
+  if (attempts >= maxAttempts) {
+    console.log(
+      "\nNo response received after maximum attempts. Please check the contract state."
+    );
+  }
 }
 
 async function getUserInput(): Promise<string | undefined> {
@@ -362,6 +137,23 @@ async function getUserInput(): Promise<string | undefined> {
     console.error("Error getting user input:", err);
     rl.close();
   }
+}
+
+function getChatId(receipt: TransactionReceipt, contract: Contract) {
+  let chatId;
+  for (const log of receipt.logs) {
+    try {
+      const parsedLog = contract.interface.parseLog(log);
+      if (parsedLog && parsedLog.name === "ChatCreated") {
+        // Second event argument
+        chatId = ethers.toNumber(parsedLog.args[1]);
+      }
+    } catch (error) {
+      // This log might not have been from your contract, or it might be an anonymous log
+      console.log("Could not parse log:", log);
+    }
+  }
+  return chatId;
 }
 
 main()
