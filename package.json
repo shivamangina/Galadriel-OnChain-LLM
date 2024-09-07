@@ -13,6 +13,7 @@
     "deployTest:localhost": "npx hardhat run scripts/deployTest.ts --network localhost",
     "deployTest:galadriel": "npx hardhat run scripts/deployTest.ts --network galadriel",
     "callQuickstart": "npx hardhat run scripts/callQuickstart.ts --network galadriel",
+    "callChatRuns": "npx hardhat run scripts/callChatRuns.ts --network galadriel",
     "generateStandardJson": "npx hardhat solidity-json",
     "debug": "npx hardhat test scripts/debugContract.ts"
   },
