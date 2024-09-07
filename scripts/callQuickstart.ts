@@ -4,6 +4,11 @@ import { Contract, TransactionReceipt } from "ethers";
 
 const { ethers } = require("hardhat");
 
+interface Message {
+  role: string;
+  content: string;
+}
+
 async function main() {
   if (!process.env.QUICKSTART_CONTRACT_ADDRESS) {
     throw new Error("QUICKSTART_CONTRACT_ADDRESS env variable is not set.");
@@ -19,99 +24,104 @@ async function main() {
   const message = await getUserInput();
 
   // Call the startChat function
-  try {
-    const transactionResponse = await contract.startChat(message);
-    // console.log(transactionResponse, "transactionResponse");
+  const transactionResponse = await contract.startChat(message);
+  // console.log(transactionResponse, "transactionResponse");
 
-    const receipt = await transactionResponse.wait();
-    // console.log(receipt, "receipt");
+  const receipt = await transactionResponse.wait();
+  // console.log(receipt, "receipt");
 
-    console.log(
-      `Transaction sent, hash: ${receipt.hash}.\nExplorer: https://explorer.galadriel.com/tx/${receipt.hash}`
-    );
-    console.log(`Chat started with message: "${message}"`);
+  console.log(
+    `Transaction sent, hash: ${receipt.hash}.\nExplorer: https://explorer.galadriel.com/tx/${receipt.hash}`
+  );
+  console.log(`Chat started with message: "${message}"`);
 
-    let chatId = getChatId(receipt, contract);
-    console.log(`Created chat ID: ${chatId}`);
-    if (!chatId && chatId !== 0) {
-      return;
-    }
-  } catch (error) {
-    console.error("Error starting chat:", error);
+  let chatId = getChatId(receipt, contract);
+  console.log(`Created chat ID: ${chatId}`);
+  if (!chatId && chatId !== 0) {
     return;
   }
-
-  console.log("Waiting for response: ");
+  let allMessages: Message[] = [];
+  let waitingForResponse = true;
   let attempts = 0;
-  const maxAttempts = 10; // Adjust as needed
+  const maxAttempts = 10; // Maximum number of attempts (adjust as needed)
 
-  while (attempts < maxAttempts) {
-    try {
-      const chatRun = await contract.chatRuns(0); // Assuming 0 is the latest chat ID
-      console.log(chatRun, "chatRun");
+  while (waitingForResponse && attempts < maxAttempts) {
+    const messages: Message[] = await getNewMessages(contract, chatId);
+    console.log(messages, "messages");
 
-      console.log(
-        `Chat run: Owner: ${
-          chatRun[0]
-        }, Messages Count: ${chatRun[1].toString()}`
-      );
+    const newMessages = messages.slice(allMessages.length);
+    console.log(newMessages, "newMessages");
 
-      if (Number(chatRun[1].toString()) >= 1) {
-        const messages = await contract.getMessageHistory(0); // Use 0 as the chat ID
-        console.log(messages, "messages");
+    if (newMessages.length > 0) {
+      for (let message of newMessages) {
+        console.log(`${message.role}: ${message.content}`);
+        allMessages.push(message);
 
-        // Function to extract message content
-        const getMessageContent = (message: any) => {
-          if (message && message.content && message.content.length > 0) {
-            return message.content[0].value;
-          }
-          return "Unable to retrieve message content";
-        };
-
-        // Extract and log system message
-        const systemMessage = messages.find(
-          (msg: any) => msg.role === "system"
-        );
-        console.log(
-          "\nSystem message:",
-          systemMessage
-            ? getMessageContent(systemMessage)
-            : "No system message found"
-        );
-
-        // Extract and log user message
-        const userMessage = messages.find((msg: any) => msg.role === "user");
-        console.log(
-          "\nUser message:",
-          userMessage ? getMessageContent(userMessage) : "No user message found"
-        );
-
-        // Extract and log assistant message (if present)
-        const assistantMessage = messages.find(
-          (msg: any) => msg.role === "assistant"
-        );
-        if (assistantMessage) {
-          console.log("\nChat response:", getMessageContent(assistantMessage));
-        } else {
-          console.log("\nNo response from the assistant yet.");
+        if (message.role === "assistant") {
+          waitingForResponse = false;
+          break;
         }
-
-        break;
       }
-    } catch (error) {
-      console.error("Error while fetching chat run:", error);
-      break;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
-    process.stdout.write(".");
-    attempts++;
+    if (waitingForResponse) {
+      console.log("Waiting for assistant's response...");
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before next attempt
+      attempts++;
+    }
   }
 
   if (attempts >= maxAttempts) {
-    console.log(
-      "\nNo response received after maximum attempts. Please check the contract state."
-    );
+    console.log("Max attempts reached. No response from assistant.");
+    return;
+  }
+
+  console.log(
+    "Assistant has responded. You can now continue the conversation."
+  );
+
+  // Continue the chat loop for further interactions
+  while (true) {
+    const userMessage: any = await getUserInput();
+    console.log("User Input:", userMessage);
+
+    const transactionResponse = await contract.addMessage(userMessage, chatId);
+    const receipt = await transactionResponse.wait();
+    console.log(`Message sent, tx hash: ${receipt.hash}`);
+
+    allMessages.push({ role: "user", content: userMessage });
+
+    waitingForResponse = true;
+    attempts = 0;
+
+    while (waitingForResponse && attempts < maxAttempts) {
+      const messages: Message[] = await getNewMessages(contract, chatId);
+
+      const newMessages = messages.slice(allMessages.length);
+
+      if (newMessages.length > 0) {
+        for (let message of newMessages) {
+          console.log(`${message.role}: ${message.content}`);
+          allMessages.push(message);
+
+          if (message.role === "assistant") {
+            waitingForResponse = false;
+            break;
+          }
+        }
+      }
+
+      if (waitingForResponse) {
+        console.log("Waiting for assistant's response...");
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before next attempt
+        attempts++;
+      }
+    }
+
+    if (attempts >= maxAttempts) {
+      console.log("Max attempts reached. No response from assistant.");
+      break;
+    }
   }
 }
 
@@ -154,6 +164,21 @@ function getChatId(receipt: TransactionReceipt, contract: Contract) {
     }
   }
   return chatId;
+}
+
+async function getNewMessages(
+  contract: Contract,
+  chatId: number
+): Promise<Message[]> {
+  // Add a 5-second delay before fetching messages
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  const messages = await contract.getMessageHistory(chatId);
+
+  return messages.map((message: any) => ({
+    role: message.role,
+    content: message.content[0].value,
+  }));
 }
 
 main()
