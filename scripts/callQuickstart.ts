@@ -337,7 +337,7 @@ async function main() {
     console.log(".");
   }
 
-  console.log(`Image generation completed, image URL: ${newResponse}`);
+  console.log(`Chat started with message: ${newResponse}`);
 }
 
 async function getUserInput(): Promise<string | undefined> {
