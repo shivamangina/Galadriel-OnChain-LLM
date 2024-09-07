@@ -305,6 +305,8 @@ async function main() {
     throw new Error("QUICKSTART_CONTRACT_ADDRESS env variable is not set.");
   }
 
+  // chatRuns
+
   const contractAddress = process.env.QUICKSTART_CONTRACT_ADDRESS;
   const [signer] = await ethers.getSigners();
 
@@ -315,12 +317,12 @@ async function main() {
   const message = await getUserInput();
 
   // Call the startChat function
-  const transactionResponse = await contract.initializeDalleCall(message);
+  const transactionResponse = await contract.startChat(message);
   const receipt = await transactionResponse.wait();
   console.log(
     `Transaction sent, hash: ${receipt.hash}.\nExplorer: https://explorer.galadriel.com/tx/${receipt.hash}`
   );
-  console.log(`Image generation started with message: "${message}"`);
+  console.log(`Chat started with message: "${message}"`);
 
   // loop and sleep by 1000ms, and keep printing `lastResponse` in the contract.
   let lastResponse = await contract.lastResponse();
@@ -329,8 +331,9 @@ async function main() {
   // print w/o newline
   console.log("Waiting for response: ");
   while (newResponse === lastResponse) {
+    // TODO: Get the chat history
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    newResponse = await contract.lastResponse();
+    newResponse = await contract.chatRuns();
     console.log(".");
   }
 
