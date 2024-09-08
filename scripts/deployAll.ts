@@ -1,33 +1,24 @@
 import { ethers } from "hardhat";
 
-const SYSTEM_PROMPT = "You are a helpful assistant";
-
 async function main() {
-  if (!process.env.ORACLE_ADDRESS) {
-    throw new Error("ORACLE_ADDRESS env variable is not set.");
-  }
-  const oracleAddress: string = process.env.ORACLE_ADDRESS;
-  for (let contractName of ["OpenAiChatGpt"]) {
-    await deployChatGpt(contractName, oracleAddress, SYSTEM_PROMPT);
+  const oracleAddress = "0x68EC9556830AD097D661Df2557FBCeC166a0A075";
+
+  for (let contractName of [
+    "OpenAiJokeGenerater",
+  ]) {
+    await deployChatGpt(contractName, oracleAddress);
   }
 }
 
-async function deployChatGpt(
-  contractName: string,
-  oracleAddress: string,
-  systemPrompt: string
-) {
-  const agent = await ethers.deployContract(
-    contractName,
-    [oracleAddress, systemPrompt],
-    {}
-  );
+async function deployChatGpt(contractName: string, oracleAddress: string) {
+  const agent = await ethers.deployContract(contractName, [oracleAddress], {});
 
   await agent.waitForDeployment();
 
   console.log(`${contractName} deployed to ${agent.target}`);
 }
 
+// We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
   console.error(error);

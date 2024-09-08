@@ -6,94 +6,15 @@ export const contractABI = [
         name: "initialOracleAddress",
         type: "address",
       },
-      {
-        internalType: "string",
-        name: "systemPrompt",
-        type: "string",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "chatId",
-        type: "uint256",
-      },
-    ],
-    name: "ChatCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOracleAddress",
-        type: "address",
-      },
-    ],
-    name: "OracleAddressUpdated",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "message",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "runId",
-        type: "uint256",
-      },
-    ],
-    name: "addMessage",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
   },
   {
     inputs: [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256",
-      },
-    ],
-    name: "chatRuns",
-    outputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "messagesCount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "chatId",
         type: "uint256",
       },
     ],
@@ -133,33 +54,23 @@ export const contractABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "runId",
-        type: "uint256",
-      },
+    inputs: [],
+    name: "message",
+    outputs: [
       {
         internalType: "string",
-        name: "response",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "errorMessage",
+        name: "role",
         type: "string",
       },
     ],
-    name: "onOracleFunctionResponse",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "uint256",
-        name: "runId",
+        name: "",
         type: "uint256",
       },
       {
@@ -221,12 +132,12 @@ export const contractABI = [
           },
         ],
         internalType: "struct IOracle.OpenAiResponse",
-        name: "response",
+        name: "_response",
         type: "tuple",
       },
       {
         internalType: "string",
-        name: "errorMessage",
+        name: "_errorMessage",
         type: "string",
       },
     ],
@@ -237,20 +148,7 @@ export const contractABI = [
   },
   {
     inputs: [],
-    name: "oracleAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "prompt",
+    name: "response",
     outputs: [
       {
         internalType: "string",
@@ -264,65 +162,14 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newOracleAddress",
-        type: "address",
+        internalType: "string",
+        name: "_message",
+        type: "string",
       },
     ],
-    name: "setOracleAddress",
+    name: "sendMessage",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "message",
-        type: "string",
-      },
-    ],
-    name: "startChat",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "message",
-        type: "string",
-      },
-    ],
-    name: "initializeDalleCall",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lastResponse",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];
