@@ -44,6 +44,26 @@ You can interact with the deployed contract using the address above or view its 
 
 <br>
 
+## Frontend Development
+
+While we initiated frontend development for this project, we encountered challenges with Web3 authentication and Galadriel connectivity. Due to these issues and time constraints, the frontend remains incomplete. However, we've made progress and would like to share our current work:
+
+### Frontend Repository
+
+You can view our frontend progress here: [GALAugh Frontend Repo](https://github.com/satyasandeep007/GALAugh/)
+
+### UI Previews
+
+#### Home Page
+
+![GALAugh Home Page](./galaugh_home.png)
+
+#### Joke Page
+
+![GALAugh Joke Page](./galaugh_app.png)
+
+We plan to resolve the remaining issues and complete the frontend in future updates.
+
 ## 👥 Meet Our Team
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
