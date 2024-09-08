@@ -1,41 +1,74 @@
-# Project Name
+# GALAugh
 
-Brief description of your project.
+**GALAugh: Generate Jokes onchain using Galadriel AI**
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Contributing](#contributing)
-- [License](#license)
+## 🚀 Get Started
 
-## Installation
+**GitHub Repo**: [Repo Link](https://github.com/shivamangina/Galadriel-OnChain-LLM)  
+**YouTube Video**: [Demo Video](https://www.youtube.com)
 
-Instructions on how to install and set up your project.
+## 🛠️ Stack We Used
 
-## Usage
+- Galadriel AI
+- Solidity
+- Hardhat
 
-Explain how to use your project, including any important commands or configurations.
+## 📚 Steps to Run the Project
 
-## Features
+1. **Clone the repository**
 
-List the key features of your project.
+   ```bash
+   git clone https://github.com/shivamangina/Galadriel-OnChain-LLM
+   ```
 
-- Feature 1
-- Feature 2
-- Feature 3
+2. **Install the dependencies**
 
-## Contributing
+   ```bash
+   npm install
+   ```
 
-Guidelines for contributing to your project.
+3. **Start the app**
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -am 'Add some feature'`)
-5. Push to the branch (`git push origin feature/your-feature`)
-6. Create a new Pull Request
+   ```bash
+   npm run callJokeGenerater
+   ```
 
-## License
+<br>
 
-This project is licensed under the [MIT License](LICENSE).
+## 👥 Meet Our Team
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+   <p style="flex:1">Shiva Kumar: </p>
+   <div style="flex:4; justify-content: space-between;">
+      <a href="https://www.linkedin.com/in/shivamangina/" target="_blank">
+      <img src=https://img.shields.io/badge/linkedin-%2300acee.svg?color=405DE6&style=for-the-badge&logo=linkedin&logoColor=white alt=linkedin style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://twitter.com/shivakmangina" target="_blank">
+      <img src=https://img.shields.io/badge/twitter-%2300acee.svg?color=1DA1F2&style=for-the-badge&logo=twitter&logoColor=white alt=twitter style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://www.instagram.com/shiva_mangina" target="_blank">
+      <img src=https://img.shields.io/badge/instagram-%ff5851db.svg?color=C13584&style=for-the-badge&logo=instagram&logoColor=white alt=instagram style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://github.com/shivamangina" target="_blank">
+      <img src=https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white alt=github style="margin-bottom: 5px;" />
+      </a>
+   </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+   <p style="flex:1">Sandeep Kumar: </p>
+   <div style="flex:4; justify-content: space-between;">
+      <a href="https://www.linkedin.com/in/satyasandeep" target="_blank">
+      <img src=https://img.shields.io/badge/linkedin-%2300acee.svg?color=405DE6&style=for-the-badge&logo=linkedin&logoColor=white alt=linkedin style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://twitter.com/satyasandeep76" target="_blank">
+      <img src=https://img.shields.io/badge/twitter-%2300acee.svg?color=1DA1F2&style=for-the-badge&logo=twitter&logoColor=white alt=twitter style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://www.instagram.com/satyasandeep007" target="_blank">
+      <img src=https://img.shields.io/badge/instagram-%ff5851db.svg?color=C13584&style=for-the-badge&logo=instagram&logoColor=white alt=instagram style="margin-bottom: 5px;" />
+      </a>
+      <a href="https://github.com/satyasandeep007" target="_blank">
+      <img src=https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white alt=github style="margin-bottom: 5px;" />
+      </a>
+   </div>
+</div>
