@@ -2,6 +2,15 @@
 
 **GALAugh: Generate Jokes onchain using Galadriel AI**
 
+![logo](./logo.png)
+
+## Contract Information
+
+- **Address**: `0x13C081cfec90B538dc8334D405Df2F24a41b76B2`
+- **Explorer**: [View on Galadriel Explorer](https://explorer.galadriel.com/address/0x13C081cfec90B538dc8334D405Df2F24a41b76B2)
+
+You can interact with the deployed contract using the address above or view its details on the Galadriel Explorer.
+
 ## 🚀 Get Started
 
 **GitHub Repo**: [Repo Link](https://github.com/shivamangina/Galadriel-OnChain-LLM)  
